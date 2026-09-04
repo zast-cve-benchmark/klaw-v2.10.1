@@ -1,0 +1,352 @@
+package io.aiven.klaw.controller;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.aiven.klaw.UtilMethods;
+import io.aiven.klaw.model.ApiResponse;
+import io.aiven.klaw.model.SyncTopicUpdates;
+import io.aiven.klaw.model.TopicInfo;
+import io.aiven.klaw.model.enums.AclPatternType;
+import io.aiven.klaw.model.enums.ApiResultStatus;
+import io.aiven.klaw.model.requests.TopicRequestModel;
+import io.aiven.klaw.model.response.SyncTopicsList;
+import io.aiven.klaw.model.response.TopicRequestsResponseModel;
+import io.aiven.klaw.model.response.TopicTeamResponse;
+import io.aiven.klaw.service.TopicControllerService;
+import io.aiven.klaw.service.TopicSyncControllerService;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.validation.Validator;
+
+@ExtendWith(SpringExtension.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+public class TopicControllerTest {
+
+  public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+  @MockBean private TopicControllerService topicControllerService;
+
+  @MockBean private TopicSyncControllerService topicSyncControllerService;
+
+  private UtilMethods utilMethods;
+
+  @Mock private Validator validator;
+
+  private MockMvc mvc, mvcSync;
+
+  @BeforeEach
+  public void setUp() throws Exception {
+    TopicController topicController = new TopicController();
+    TopicSyncController topicSyncController = new TopicSyncController();
+    mvc =
+        MockMvcBuilders.standaloneSetup(topicController)
+            .setValidator(validator)
+            .dispatchOptions(true)
+            .build();
+    utilMethods = new UtilMethods();
+    mvcSync = MockMvcBuilders.standaloneSetup(topicSyncController).dispatchOptions(true).build();
+    utilMethods = new UtilMethods();
+    ReflectionTestUtils.setField(topicController, "topicControllerService", topicControllerService);
+    ReflectionTestUtils.setField(
+        topicSyncController, "topicSyncControllerService", topicSyncControllerService);
+  }
+
+  @Test
+  @Order(1)
+  public void createTopics() throws Exception {
+    TopicRequestModel addTopicRequest = utilMethods.getTopicCreateRequestModel(1001);
+    String jsonReq = OBJECT_MAPPER.writer().writeValueAsString(addTopicRequest);
+    ApiResponse apiResponse = ApiResponse.SUCCESS;
+    when(topicControllerService.createTopicsCreateRequest(any())).thenReturn(apiResponse);
+
+    mvc.perform(
+            MockMvcRequestBuilders.post("/createTopics")
+                .content(jsonReq)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.message", is(ApiResultStatus.SUCCESS.value)));
+  }
+
+  @Test
+  @Order(2)
+  public void updateSyncTopics() throws Exception {
+    List<SyncTopicUpdates> syncTopicUpdates = utilMethods.getSyncTopicUpdates();
+    String jsonReq = OBJECT_MAPPER.writer().writeValueAsString(syncTopicUpdates);
+    ApiResponse apiResponse = ApiResponse.SUCCESS;
+    when(topicSyncControllerService.updateSyncTopics(any())).thenReturn(apiResponse);
+
+    mvcSync
+        .perform(
+            MockMvcRequestBuilders.post("/updateSyncTopics")
+                .content(jsonReq)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.message", is(ApiResultStatus.SUCCESS.value)));
+  }
+
+  @Test
+  @Order(3)
+  public void getTopicRequests() throws Exception {
+    List<TopicRequestsResponseModel> topicRequests = utilMethods.getTopicRequestsModel();
+
+    when(topicControllerService.getTopicRequests(
+            "1",
+            "",
+            null,
+            "all",
+            null,
+            null,
+            io.aiven.klaw.model.enums.Order.DESC_REQUESTED_TIME,
+            false))
+        .thenReturn(topicRequests);
+
+    mvc.perform(
+            MockMvcRequestBuilders.get("/getTopicRequests")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("pageNo", "1")
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$", hasSize(1)));
+  }
+
+  @Test
+  @Order(4)
+  public void getTopicTeam() throws Exception {
+    String topicName = "testtopic";
+    //    Map<String, String> teamMap = new HashMap<>();
+    TopicTeamResponse topicTeamResponse = new TopicTeamResponse();
+    topicTeamResponse.setTeam("Team1");
+    topicTeamResponse.setTeamId(1001);
+    when(topicControllerService.getTopicTeamOnly(topicName, AclPatternType.LITERAL))
+        .thenReturn(topicTeamResponse);
+
+    String res =
+        mvc.perform(
+                MockMvcRequestBuilders.get("/getTopicTeam")
+                    .param("topicName", topicName)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andReturn()
+            .getResponse()
+            .getContentAsString();
+    Map<String, String> resp = new ObjectMapper().readValue(res, new TypeReference<>() {});
+    assertThat(resp).containsEntry("team", "Team1").containsEntry("teamId", "1001");
+  }
+
+  @Test
+  @Order(5)
+  public void getCreatedTopicRequests() throws Exception {
+    List<TopicRequestsResponseModel> topicReqs = utilMethods.getTopicRequestsList();
+    when(topicControllerService.getTopicRequestsForApprover(
+            "1",
+            "",
+            "created",
+            null,
+            null,
+            null,
+            null,
+            io.aiven.klaw.model.enums.Order.ASC_REQUESTED_TIME))
+        .thenReturn(topicReqs);
+
+    mvc.perform(
+            MockMvcRequestBuilders.get("/getTopicRequestsForApprover")
+                .param("pageNo", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$", hasSize(1)));
+  }
+
+  @Test
+  @Order(6)
+  public void deleteTopicRequests() throws Exception {
+    ApiResponse apiResponse = ApiResponse.SUCCESS;
+    when(topicControllerService.deleteTopicRequests(anyString())).thenReturn(apiResponse);
+
+    mvc.perform(
+            MockMvcRequestBuilders.post("/deleteTopicRequests")
+                .param("topicId", "testtopic")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.message", is(ApiResultStatus.SUCCESS.value)));
+  }
+
+  @Test
+  @Order(7)
+  public void approveTopicRequests() throws Exception {
+    ApiResponse apiResponse = ApiResponse.SUCCESS;
+    when(topicControllerService.approveTopicRequests(anyString())).thenReturn(apiResponse);
+
+    mvc.perform(
+            MockMvcRequestBuilders.post("/execTopicRequests")
+                .param("topicId", "testtopic")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.message", is(ApiResultStatus.SUCCESS.value)));
+  }
+
+  @Test
+  @Order(8)
+  public void declineTopicRequests() throws Exception {
+    ApiResponse apiResponse = ApiResponse.SUCCESS;
+    when(topicControllerService.declineTopicRequests(anyString(), anyString()))
+        .thenReturn(apiResponse);
+
+    mvc.perform(
+            MockMvcRequestBuilders.post("/execTopicRequestsDecline")
+                .param("topicId", "1001")
+                .param("reasonForDecline", "reason")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.message", is(ApiResultStatus.SUCCESS.value)));
+  }
+
+  @Test
+  @Order(9)
+  public void getTopics() throws Exception {
+    List<List<TopicInfo>> topicList = utilMethods.getTopicInfoList();
+
+    when(topicControllerService.getTopics(
+            anyString(), anyString(), anyString(), anyString(), anyInt(), any()))
+        .thenReturn(topicList);
+
+    mvc.perform(
+            MockMvcRequestBuilders.get("/getTopics")
+                .param("env", "1")
+                .param("pageNo", "1")
+                .param("topicnamesearch", "testtopic")
+                .param("teamId", "1001")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$", hasSize(1)));
+  }
+
+  @Test
+  @Order(10)
+  public void getTopicsOnly() throws Exception {
+    List<String> topicList = Arrays.asList("testtopic1", "testtopic2");
+    when(topicControllerService.getAllTopics(false, "ALL")).thenReturn(topicList);
+
+    mvc.perform(
+            MockMvcRequestBuilders.get("/getTopicsOnly")
+                .param("env", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$", hasSize(2)));
+  }
+
+  @Test
+  @Order(11)
+  public void getSyncTopics() throws Exception {
+    SyncTopicsList syncTopicsList = new SyncTopicsList();
+
+    when(topicSyncControllerService.getSyncTopics(
+            anyString(),
+            anyString(),
+            anyString(),
+            anyString(),
+            anyString(),
+            anyBoolean(),
+            anyBoolean(),
+            eq(null),
+            anyBoolean()))
+        .thenReturn(syncTopicsList);
+
+    mvcSync
+        .perform(
+            MockMvcRequestBuilders.get("/getSyncTopics")
+                .param("env", "1")
+                .param("pageNo", "1")
+                .param("topicnamesearch", "testtopic")
+                .param("showAllTopics", "true")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.allTopicsCount", is(0)));
+  }
+
+  @Test
+  @Order(12)
+  public void updateTopic() throws Exception {
+    TopicRequestModel addTopicRequest = utilMethods.getTopicUpdateRequestModel(1001);
+    String jsonReq = OBJECT_MAPPER.writer().writeValueAsString(addTopicRequest);
+    ApiResponse apiResponse = ApiResponse.SUCCESS;
+    when(topicControllerService.createTopicsUpdateRequest(any())).thenReturn(apiResponse);
+
+    mvc.perform(
+            MockMvcRequestBuilders.post("/updateTopics")
+                .content(jsonReq)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.message", is(ApiResultStatus.SUCCESS.value)));
+  }
+
+  @Test
+  @Order(13)
+  public void getTopicEvents() throws Exception {
+    when(topicControllerService.getTopicEvents(
+            anyString(),
+            anyString(),
+            anyString(),
+            anyString(),
+            anyInt(),
+            anyInt(),
+            anyInt(),
+            anyInt()))
+        .thenReturn(Collections.emptyMap());
+
+    MvcResult mvcResult =
+        mvc.perform(
+                MockMvcRequestBuilders.get("/getTopicEvents")
+                    .param("envId", "1")
+                    .param("topicName", "test")
+                    .param("consumerGroupId", "1")
+                    .param("offsetId", "0")
+                    .param("selectedPartitionId", "0")
+                    .param("selectedNumberOfOffsets", "0")
+                    .param("selectedOffsetRangeStart", "0")
+                    .param("selectedOffsetRangeEnd", "0")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andReturn();
+    assertThat(mvcResult.getResponse().getContentAsString()).isEqualTo("{}");
+  }
+}

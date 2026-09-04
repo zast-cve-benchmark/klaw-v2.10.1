@@ -1,0 +1,47 @@
+{
+  "name": "klaw-playwright-tests",
+  "private": true,
+  "type": "module",
+  "main": "",
+  "license": "Apache-2.0",
+  "engineStrict": true,
+  "engines": {
+    "node": ">=20.0.0 <21.0.0",
+    "pnpm": ">=9.0.0 <10.0.0",
+    "yarn": "❗Please use pnpm to assure a consistent package management.",
+    "npm": "❗Please use pnpm to assure a consistent package management."
+  },
+  "scripts": {
+    "__build-klaw": "./setup-env.sh",
+    "__wait-for-local-klaw": "./wait-for-klaw.sh",
+    "__test": "playwright test",
+    "test-local": "pnpm __build-klaw && pnpm __wait-for-local-klaw && pnpm __test",
+    "lint": "prettier --check . && eslint .",
+    "reformat": "prettier --write . && eslint --fix .",
+    "lint-staged": "lint-staged",
+    "prepare": "git config --local core.hooksPath .githooks/",
+    "tsc": "tsc -p tsconfig.json"
+  },
+  "lint-staged": {
+    "**/!(*api.d).{ts,tsx,js}": [
+      "prettier --check",
+      "eslint"
+    ],
+    "**/*.{md, css}": [
+      "prettier --check"
+    ]
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.52.0",
+    "@types/node": "^20.5.9",
+    "@typescript-eslint/parser": "^6.21.0",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^10.1.5",
+    "lint-staged": "^16.0.0",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^7.0.0"
+  }
+}

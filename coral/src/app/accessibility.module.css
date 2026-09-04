@@ -1,0 +1,147 @@
+/*
+ * Styles and classes in this file are use to
+ * improve overall accessibility of Klaw.
+ * Styles are separated into
+ * - global rules
+ *   -> not available by DS yet)
+ * - additional a11y-related custom classes
+ *   -> not available by DS yet)
+ * - overwriting DS styles
+ *   -> can be removed if styles in DS
+ *       or custom theme are covered
+*/
+:root {
+  /* Vars for navigation elements match the colour for
+    DS links links in navigation elements don't need
+    a colour but should have a hover colour*/
+  --navigation-elements-active: var(--aquarium-colors-primary-80);
+  --navigation-elements-hover: var(--aquarium-colors-primary-80);
+
+  /*the var matches the colour the DS sets for focus
+    via .focus\ classes */
+  --interactive-elements-focus: var(--aquarium-colors-info-70);
+}
+
+/************************************************
+ * global styles, not covered by DS yet
+ ************************************************
+*/
+
+/* When we're using Router Links (or a elements)*/
+/* we need to match the styles to DS Links */
+/* This is covered by the selector*/
+/* a:global(:not(.Aquarium-Button)*/
+
+a:global(:not(.Aquarium-Button)) {
+  color: var(--text-link-color);
+}
+
+a:global(:not(.Aquarium-Button)):focus-visible,
+a:global(:not(.Aquarium-Button)):hover {
+  text-decoration: underline;
+}
+
+a:not(.Aquarium-Button):focus-visible {
+  outline-offset: 1px !important;
+  outline: 2px solid var(--interactive-elements-focus);
+}
+
+/****************************************
+ * a11y-related custom classes
+ ****************************************
+*/
+
+:global(.visually-hidden) {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+  font-size: 18px;
+}
+
+/*Accessibility enhancements for DataTable - the component */
+/*needs to be wrapped in a div with the class "a11y-enhancement-data-table"*/
+/*for them to be applied!*/
+
+/*Adds the hover style to <tr>s when an element in the row is */
+/*in focus of the keyboard (same behavior like hovering the <tr> with the mouse)*/
+:global(.a11y-enhancement-data-table) table tr:focus-within {
+  --tw-bg-opacity: 1;
+  background-color: rgb(247 247 250 / var(--tw-bg-opacity));
+}
+
+/****************************************
+ * DS overwrites
+ ****************************************
+*/
+
+/*DS sets focus on elements via a .focus\ class (we can't select that)*/
+/*and changes the border color for elements with border. This is not */
+/*enough to match accessibility requirements (only 1 px border with low*/
+/*color contrast) so we're creating an outline of 2px */
+:root input:focus,
+:root select:focus,
+:root textarea:focus {
+  outline: 2px solid var(--interactive-elements-focus) !important;
+  outline-offset: 0 !important;
+}
+
+/* DS sets focus on button with .focus-visible\ and not .focus */
+/* so we're using this selector. Since the styles sets an */
+/* outline, we're only adding a px more to it to create */
+/* the same outline as for other elements */
+:root button:focus-visible {
+  outline: 1px solid var(--interactive-elements-focus) !important;
+  outline-offset: 0 !important;
+}
+
+/* This is needed to create the same outline like above */
+/* for buttons that are not part of the DS*/
+:root button:not(.Aquarium-Button):focus-visible {
+  outline: 2px solid var(--interactive-elements-focus) !important;
+  outline-offset: 0 !important;
+}
+
+/*Applies color only to label and legend text that is not in error state*/
+:root legend span:not([class*="error"]),
+:root label span:not([class*="error"]) {
+  /*represents grey-70 */
+  color: #4a4b57 !important;
+}
+
+/* Accessibility improvement to <Tabs /> component */
+:root [role="tablist"] [role="tab"]:hover {
+  border-color: var(--aquarium-colors-primary-80) !important;
+}
+
+:root [role="tablist"] [role="tab"]:focus,
+:root [role="tablist"] [role="tab"]:focus-visible {
+  /* The default outline was overflowing to the container. */
+  outline-offset: -2px !important;
+  background-color: var(--aquarium-colors-grey-0);
+}
+
+:root [role="tablist"] [role="tab"]:hover > *,
+:root [role="tablist"] [role="tab"]:focus > *,
+:root [role="tablist"] [role="tab"]:focus-visible > * {
+  color: var(--aquarium-colors-primary-80) !important;
+}
+
+:root [role="tablist"] [role="tab"][aria-selected="true"] {
+  background-color: #f7f7fa !important; /* grey-0 */
+}
+
+/* A11y enhancement Table as well as DataTable*/
+/* Workaround to get accessible color until DS ready */
+/* changes color to be accessible contrast */
+/* changes font weight to be distinguishable */
+/* from table cells font */
+:root thead > tr > th {
+  /*represents grey-70 */
+  color: #4a4b57 !important;
+}

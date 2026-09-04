@@ -1,0 +1,120 @@
+import { MarkdownString } from "src/domain/helper/documentation-helper";
+import { RequestOperationType, RequestStatus } from "src/domain/requests";
+import type {
+  KlawApiModel,
+  KlawApiResponse,
+  Paginated,
+  ResolveIntersectionTypes,
+} from "types/utils";
+import { KlawApiRequestQueryParameters } from "types/utils";
+
+type TopicApiResponse = ResolveIntersectionTypes<Paginated<Topic[]>>;
+
+type Topic = KlawApiModel<"TopicInfo">;
+type TopicNames = KlawApiResponse<"getTopicsOnly">;
+type TopicTeam = KlawApiModel<"TopicTeamResponse">;
+type TopicMessages = {
+  [key: string]: string | undefined;
+};
+type NoContent = {
+  status: boolean;
+};
+
+type TopicType = NonNullable<
+  KlawApiRequestQueryParameters<"getTopics">["topicType"]
+>;
+
+type GetTopicsQueryParameter = KlawApiRequestQueryParameters<"getTopics"> & {
+  topicType?: TopicType;
+};
+type TopicAdvancedConfigurationOptions = {
+  key: string;
+  name?: string;
+  documentation?: {
+    link: string;
+    text: string;
+  };
+};
+
+type TopicRequestOperationTypes = RequestOperationType;
+type TopicRequestStatus = RequestStatus;
+
+type TopicRequest = KlawApiModel<"TopicRequestsResponseModel">;
+
+type TopicRequestApiResponse = ResolveIntersectionTypes<
+  Paginated<TopicRequest[]>
+>;
+
+type TopicDocumentationMarkdown = MarkdownString;
+
+// KlawApiModel<"TopicOverview">
+// Represents the TopicOverview as defined in the backend.
+// "TopicOverview" is the type (and object) we're using in FE
+// we're redefining property types here to fit our need in app better
+// transformTopicOverviewResponse() is taking care of transforming
+// the properties and makes sure the types are matching between BE and FE
+type TopicOverview = ResolveIntersectionTypes<
+  Omit<
+    KlawApiModel<"TopicOverview">,
+    "topicInfoList" | "topicDocumentation"
+  > & {
+    // "topicInfoList" is a list of KlawApiModel<"TopicOverviewInfo">
+    // there is only ever one entry in this list, and we want to access
+    // it accordingly, that's why we transform it to topicInfo instead
+    topicInfo: KlawApiModel<"TopicOverviewInfo">;
+    topicDocumentation?: TopicDocumentationMarkdown;
+  }
+>;
+
+type AclOverviewInfo = KlawApiModel<"AclOverviewInfo">;
+
+type TopicSchemaOverview = KlawApiModel<"SchemaOverview">;
+
+/**
+ * "remark" is currently not implemented in the API
+ * and will be added later. We're already preparing
+ * our UI and code for that.
+ **/
+type DeleteTopicPayload = ResolveIntersectionTypes<
+  KlawApiModel<"TopicDeleteRequestModel"> & {
+    remark?: string;
+  }
+>;
+
+// "remark" is currently not implemented in the API
+// and will be added later. We're already preparing
+// our UI and code for that.
+type TopicClaimPayload = ResolveIntersectionTypes<
+  KlawApiModel<"TopicClaimRequestModel"> & {
+    remark?: string;
+  }
+>;
+
+type TopicDetailsPerEnv = KlawApiModel<"TopicDetailsPerEnv">;
+
+const TOPIC_MESSAGE_DEFAULT_USER_GROUP_ID = "notdefined";
+
+export type {
+  AclOverviewInfo,
+  DeleteTopicPayload,
+  NoContent,
+  Topic,
+  TopicAdvancedConfigurationOptions,
+  TopicApiResponse,
+  TopicClaimPayload,
+  TopicDetailsPerEnv,
+  TopicDocumentationMarkdown,
+  TopicMessages,
+  TopicNames,
+  TopicOverview,
+  TopicRequest,
+  TopicRequestApiResponse,
+  TopicRequestOperationTypes,
+  TopicRequestStatus,
+  TopicSchemaOverview,
+  TopicTeam,
+  TopicType,
+  GetTopicsQueryParameter,
+};
+
+export { TOPIC_MESSAGE_DEFAULT_USER_GROUP_ID };

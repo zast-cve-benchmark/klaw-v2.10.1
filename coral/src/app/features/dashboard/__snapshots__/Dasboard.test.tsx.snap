@@ -1,0 +1,362 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Dashboard.tsx renders correct DOM according to data received from getRequestsWaitingForApproval, getActivityLogForTeamOverview, getDashboardStats 1`] = `
+<div>
+  <div
+    style="display: grid; gap: 24px; grid-template-columns: 1fr;"
+  >
+    <div
+      class="border-[2px] border-muted rounded-[2px] relative p-5 flex flex-col gap-5 bg-body outline-none transition-all w-full Aquarium-Card"
+    >
+      <div
+        class="flex flex-col flex-auto gap-4"
+      >
+        <div
+          class="typography-default-strong text-intense"
+        >
+          Topics
+        </div>
+        <div
+          class="typography-caption text-default"
+        >
+          <div
+            style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));"
+          >
+            <div
+              style="display: flex; justify-content: space-around; flex-direction: column;"
+            >
+              <div
+                class="typography-heading text-default"
+              >
+                <span
+                  class="visually-hidden"
+                >
+                  Loading information
+                </span>
+                <div
+                  aria-label="Loading..."
+                  class="bg-default h-auto before:content-['_'] whitespace-pre origin-[0%_45%] scale-[0.55] block animate-pulse Aquarium-Skeleton"
+                  role="progressbar"
+                />
+              </div>
+              <div
+                class="typography-small text-grey-50"
+              >
+                My team's topics
+              </div>
+            </div>
+            <div
+              style="display: flex; justify-content: space-around; flex-direction: column;"
+            >
+              <div
+                class="typography-heading text-default"
+              >
+                <span
+                  class="visually-hidden"
+                >
+                  Loading information
+                </span>
+                <div
+                  aria-label="Loading..."
+                  class="bg-default h-auto before:content-['_'] whitespace-pre origin-[0%_45%] scale-[0.55] block animate-pulse Aquarium-Skeleton"
+                  role="progressbar"
+                />
+              </div>
+              <div
+                class="typography-small text-grey-50"
+              >
+                My organization's topics
+              </div>
+            </div>
+            <div
+              style="display: flex; justify-content: space-around; flex-direction: column;"
+            >
+              <div
+                class="typography-heading text-default"
+              >
+                <span
+                  class="visually-hidden"
+                >
+                  Loading information
+                </span>
+                <div
+                  aria-label="Loading..."
+                  class="bg-default h-auto before:content-['_'] whitespace-pre origin-[0%_45%] scale-[0.55] block animate-pulse Aquarium-Skeleton"
+                  role="progressbar"
+                />
+              </div>
+              <div
+                class="typography-small text-grey-50"
+              >
+                My producer topics
+              </div>
+            </div>
+            <div
+              style="display: flex; justify-content: space-around; flex-direction: column;"
+            >
+              <div
+                class="typography-heading text-default"
+              >
+                <span
+                  class="visually-hidden"
+                >
+                  Loading information
+                </span>
+                <div
+                  aria-label="Loading..."
+                  class="bg-default h-auto before:content-['_'] whitespace-pre origin-[0%_45%] scale-[0.55] block animate-pulse Aquarium-Skeleton"
+                  role="progressbar"
+                />
+              </div>
+              <div
+                class="typography-small text-grey-50"
+              >
+                My consumer topics
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="border-[2px] border-muted rounded-[2px] relative p-5 flex flex-col gap-5 bg-body outline-none transition-all w-full Aquarium-Card"
+    >
+      <div
+        class="flex flex-col flex-auto gap-4"
+      >
+        <div
+          class="typography-default-strong text-intense"
+        >
+          My team's pending requests
+        </div>
+        <div
+          class="typography-caption text-default"
+        >
+          <div
+            style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));"
+          >
+            <div
+              style="display: flex; justify-content: space-around; flex-direction: column;"
+            >
+              <div
+                class="typography-heading text-default"
+              >
+                <span
+                  class="visually-hidden"
+                >
+                  Loading information
+                </span>
+                <div
+                  aria-label="Loading..."
+                  class="bg-default h-auto before:content-['_'] whitespace-pre origin-[0%_45%] scale-[0.55] block animate-pulse Aquarium-Skeleton"
+                  role="progressbar"
+                />
+              </div>
+              <div
+                class="typography-small text-grey-50"
+              >
+                Topic requests
+              </div>
+            </div>
+            <div
+              style="display: flex; justify-content: space-around; flex-direction: column;"
+            >
+              <div
+                class="typography-heading text-default"
+              >
+                <span
+                  class="visually-hidden"
+                >
+                  Loading information
+                </span>
+                <div
+                  aria-label="Loading..."
+                  class="bg-default h-auto before:content-['_'] whitespace-pre origin-[0%_45%] scale-[0.55] block animate-pulse Aquarium-Skeleton"
+                  role="progressbar"
+                />
+              </div>
+              <div
+                class="typography-small text-grey-50"
+              >
+                ACL requests
+              </div>
+            </div>
+            <div
+              style="display: flex; justify-content: space-around; flex-direction: column;"
+            >
+              <div
+                class="typography-heading text-default"
+              >
+                <span
+                  class="visually-hidden"
+                >
+                  Loading information
+                </span>
+                <div
+                  aria-label="Loading..."
+                  class="bg-default h-auto before:content-['_'] whitespace-pre origin-[0%_45%] scale-[0.55] block animate-pulse Aquarium-Skeleton"
+                  role="progressbar"
+                />
+              </div>
+              <div
+                class="typography-small text-grey-50"
+              >
+                Schema requests
+              </div>
+            </div>
+            <div
+              style="display: flex; justify-content: space-around; flex-direction: column;"
+            >
+              <div
+                class="typography-heading text-default"
+              >
+                <span
+                  class="visually-hidden"
+                >
+                  Loading information
+                </span>
+                <div
+                  aria-label="Loading..."
+                  class="bg-default h-auto before:content-['_'] whitespace-pre origin-[0%_45%] scale-[0.55] block animate-pulse Aquarium-Skeleton"
+                  role="progressbar"
+                />
+              </div>
+              <div
+                class="typography-small text-grey-50"
+              >
+                Connector requests
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="border-[2px] border-muted rounded-[2px] relative p-5 flex flex-col gap-5 bg-body outline-none transition-all w-full Aquarium-Card"
+    >
+      <div
+        class="flex flex-col flex-auto gap-4"
+      >
+        <div
+          class="typography-default-strong text-intense"
+        >
+          My team's approved requests
+        </div>
+        <div
+          class="typography-caption text-default"
+        >
+          <div
+            class="Aquarium-NativeSelect"
+            style="display: flex; flex-direction: column;"
+          >
+            <label
+              class="w-full"
+              for="react-aria-:r0:"
+              id="react-aria-:r0:-label"
+            >
+              <span
+                class="block mb-2"
+              >
+                <span
+                  class="inline-flex items-center typography-small-strong text-default"
+                >
+                  Timeframe
+                </span>
+              </span>
+              <span
+                class="Aquarium-NativeSelectBase relative block"
+              >
+                <span
+                  class="absolute right-0 inset-y-0 mr-4 text-inactive flex ml-3 pointer-events-none typography-default-strong mt-4"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="Aquarium-Icon"
+                    data-testid="icon-dropdown"
+                    height="1em"
+                    preserveAspectRatio="xMidYMid meet"
+                    role="img"
+                    viewBox="0 0 22 22"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                  >
+                    <path
+                      d="m5.5 8.25 5.5 5.5 5.5-5.5"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="1.5"
+                    />
+                  </svg>
+                </span>
+                <select
+                  class="block w-full rounded-sm appearance-none disabled:cursor-not-allowed typography-small text-default placeholder:text-inactive focus:outline-none px-3 py-3 bg-body disabled:border-default disabled:bg-default disabled:text-inactive border border-default hover:border-intense focus:border-info-default"
+                  id="react-aria-:r0:"
+                >
+                  <option
+                    value="7"
+                  >
+                    Last 7 days
+                  </option>
+                  <option
+                    selected=""
+                    value="30"
+                  >
+                    Last 30 days
+                  </option>
+                  <option
+                    value="90"
+                  >
+                    Last 90 days
+                  </option>
+                </select>
+              </span>
+            </label>
+            <p
+              class="block mt-1 mb-3 typography-caption"
+            >
+               
+            </p>
+          </div>
+          <div
+            style="display: flex; justify-content: center; align-content: center; flex-wrap: wrap; min-height: 250px;"
+          >
+            <div
+              data-icon="<g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="3" transform="translate(1 1)"><circle cx="18" cy="18" r="18" stroke-opacity=".5"/><path d="M36 18c0-9.94-8.06-18-18-18"><animateTransform attributeName="transform" dur="1s" from="0 18 18" repeatCount="indefinite" to="360 18 18" type="rotate"/></path></g>"
+              data-testid="ds-icon"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="border-[2px] border-muted rounded-[2px] relative p-5 flex flex-col gap-5 bg-body outline-none transition-all w-full Aquarium-Card"
+    >
+      <div
+        class="flex flex-col flex-auto gap-4"
+      >
+        <div
+          class="typography-default-strong text-intense"
+        >
+          My team's topics per environment
+        </div>
+        <div
+          class="typography-caption text-default"
+        >
+          <div
+            style="display: flex; justify-content: center; align-content: center; flex-wrap: wrap; min-height: 250px;"
+          >
+            <div
+              data-icon="<g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="3" transform="translate(1 1)"><circle cx="18" cy="18" r="18" stroke-opacity=".5"/><path d="M36 18c0-9.94-8.06-18-18-18"><animateTransform attributeName="transform" dur="1s" from="0 18 18" repeatCount="indefinite" to="360 18 18" type="rotate"/></path></g>"
+              data-testid="ds-icon"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div />
+</div>
+`;

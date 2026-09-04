@@ -1,0 +1,134 @@
+enum Routes {
+  DASHBOARD = "/",
+  TOPICS = "/topics",
+  TOPIC_OVERVIEW = "/topic/:topicName",
+  CONNECTORS = "/connectors",
+  CONNECTOR_OVERVIEW = "/connector/:connectorName",
+  CONNECTOR_REQUEST = "/connectors/request",
+  CONNECTOR_EDIT_REQUEST = "/connector/:connectorName/request-update",
+  CONNECTOR_PROMOTION_REQUEST = "/connector/:connectorName/request-promotion",
+  TOPIC_REQUEST = "/topics/request",
+  TOPIC_ACL_REQUEST = "/topic/:topicName/subscribe",
+  TOPIC_SCHEMA_REQUEST = "/topic/:topicName/request-schema",
+  TOPIC_PROMOTION_REQUEST = "/topic/:topicName/request-promotion",
+  TOPIC_EDIT_REQUEST = "/topic/:topicName/request-update",
+  ACL_REQUEST = "/request/acl",
+  SCHEMA_REQUEST = "/request/schema",
+  REQUESTS = "/requests",
+  APPROVALS = "/approvals",
+  ACTIVITY_LOG = "/activity-log",
+  CONFIGURATION = "/configuration",
+  ENVIRONMENTS = "/configuration/environments",
+  TEAMS = "/configuration/teams",
+  USERS = "/configuration/users",
+  CLUSTERS = "/configuration/clusters",
+  ADD_CLUSTER = "/configuration/clusters/add",
+  USER_INFORMATION = "/user",
+  USER_PROFILE = "/user/profile",
+  USER_CHANGE_PASSWORD = "/user/change-password",
+  USER_TENANT_INFO = "/user/tenant-info",
+}
+
+enum EnvironmentsTabEnum {
+  KAFKA = "ENVIRONMENTS_TAB_ENUM_kafka",
+  SCHEMA_REGISTRY = "ENVIRONMENTS_TAB_ENUM_schema_registry",
+  KAFKA_CONNECT = "ENVIRONMENTS_TAB_ENUM_kafka_connect",
+}
+
+enum TopicOverviewTabEnum {
+  OVERVIEW = "TOPIC_OVERVIEW_TAB_ENUM_overview",
+  ACLS = "TOPIC_OVERVIEW_TAB_ENUM_acls",
+  MESSAGES = "TOPIC_OVERVIEW_TAB_ENUM_messages",
+  SCHEMA = "TOPIC_OVERVIEW_TAB_ENUM_schemas",
+  DOCUMENTATION = "TOPIC_OVERVIEW_TAB_ENUM_documentation",
+  HISTORY = "TOPIC_OVERVIEW_TAB_ENUM_history",
+  SETTINGS = "TOPIC_OVERVIEW_TAB_ENUM_settings",
+}
+
+enum ConnectorOverviewTabEnum {
+  OVERVIEW = "CONNECTOR_OVERVIEW_TAB_ENUM_overview",
+  DOCUMENTATION = "CONNECTOR_OVERVIEW_TAB_ENUM_documentation",
+  HISTORY = "CONNECTOR_OVERVIEW_TAB_ENUM_history",
+  SETTINGS = "CONNECTOR_OVERVIEW_TAB_ENUM_settings",
+}
+
+enum RequestsTabEnum {
+  TOPICS = "REQUESTS_TAB_ENUM_topics",
+  ACLS = "REQUESTS_TAB_ENUM_acls",
+  SCHEMAS = "REQUESTS_TAB_ENUM_schemas",
+  CONNECTORS = "REQUESTS_TAB_ENUM_connectors",
+}
+
+enum ApprovalsTabEnum {
+  TOPICS = "APPROVALS_TAB_ENUM_topics",
+  ACLS = "APPROVALS_TAB_ENUM_acls",
+  SCHEMAS = "APPROVALS_TAB_ENUM_schemas",
+  CONNECTORS = "APPROVALS_TAB_ENUM_connectors",
+}
+
+const ENVIRONMENT_TAB_ID_INTO_PATH = {
+  [EnvironmentsTabEnum.KAFKA]: "kafka",
+  [EnvironmentsTabEnum.SCHEMA_REGISTRY]: "schema-registry",
+  [EnvironmentsTabEnum.KAFKA_CONNECT]: "kafka-connect",
+} as const;
+
+const TOPIC_OVERVIEW_TAB_ID_INTO_PATH = {
+  [TopicOverviewTabEnum.OVERVIEW]: "overview",
+  [TopicOverviewTabEnum.ACLS]: "subscriptions",
+  [TopicOverviewTabEnum.MESSAGES]: "messages",
+  [TopicOverviewTabEnum.SCHEMA]: "schema",
+  [TopicOverviewTabEnum.DOCUMENTATION]: "readme",
+  [TopicOverviewTabEnum.HISTORY]: "history",
+  [TopicOverviewTabEnum.SETTINGS]: "settings",
+} as const;
+
+const CONNECTOR_OVERVIEW_TAB_ID_INTO_PATH = {
+  [ConnectorOverviewTabEnum.OVERVIEW]: "overview",
+  [ConnectorOverviewTabEnum.DOCUMENTATION]: "readme",
+  [ConnectorOverviewTabEnum.HISTORY]: "history",
+  [ConnectorOverviewTabEnum.SETTINGS]: "settings",
+} as const;
+
+const REQUESTS_TAB_ID_INTO_PATH = {
+  [RequestsTabEnum.TOPICS]: "topics",
+  [RequestsTabEnum.ACLS]: "acls",
+  [RequestsTabEnum.SCHEMAS]: "schemas",
+  [RequestsTabEnum.CONNECTORS]: "connectors",
+} as const;
+
+const REQUESTS_TAB_PATH_LINK_MAP = {
+  [RequestsTabEnum.TOPICS]: "/myTopicRequests",
+  [RequestsTabEnum.ACLS]: "/myAclRequests",
+  [RequestsTabEnum.SCHEMAS]: "/mySchemaRequests",
+  [RequestsTabEnum.CONNECTORS]: "/myConnectorRequests",
+} as const;
+
+const APPROVALS_TAB_ID_INTO_PATH = {
+  [ApprovalsTabEnum.TOPICS]: "topics",
+  [ApprovalsTabEnum.ACLS]: "acls",
+  [ApprovalsTabEnum.SCHEMAS]: "schemas",
+  [ApprovalsTabEnum.CONNECTORS]: "connectors",
+} as const;
+
+const APPROVALS_TAB_PATH_LINK_MAP = {
+  [ApprovalsTabEnum.TOPICS]: "/execTopics",
+  [ApprovalsTabEnum.ACLS]: "/execAcls",
+  [ApprovalsTabEnum.SCHEMAS]: "/execSchemas",
+  [ApprovalsTabEnum.CONNECTORS]: "/execConnectors",
+} as const;
+
+export {
+  EnvironmentsTabEnum,
+  RequestsTabEnum,
+  ApprovalsTabEnum,
+  TopicOverviewTabEnum,
+  ConnectorOverviewTabEnum,
+  Routes,
+  ENVIRONMENT_TAB_ID_INTO_PATH,
+  REQUESTS_TAB_ID_INTO_PATH,
+  APPROVALS_TAB_ID_INTO_PATH,
+  TOPIC_OVERVIEW_TAB_ID_INTO_PATH,
+  CONNECTOR_OVERVIEW_TAB_ID_INTO_PATH,
+  APPROVALS_TAB_PATH_LINK_MAP,
+  REQUESTS_TAB_PATH_LINK_MAP,
+};

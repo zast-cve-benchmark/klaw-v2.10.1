@@ -1,0 +1,242 @@
+package io.aiven.klaw.controller;
+
+import io.aiven.klaw.error.KlawException;
+import io.aiven.klaw.model.ApiResponse;
+import io.aiven.klaw.model.enums.Order;
+import io.aiven.klaw.model.enums.PermissionType;
+import io.aiven.klaw.model.enums.RequestOperationType;
+import io.aiven.klaw.model.enums.RequestStatus;
+import io.aiven.klaw.model.requests.SchemaPromotion;
+import io.aiven.klaw.model.requests.SchemaRequestModel;
+import io.aiven.klaw.model.response.SchemaOverview;
+import io.aiven.klaw.model.response.SchemaRequestsResponseModel;
+import io.aiven.klaw.service.SchemaOverviewService;
+import io.aiven.klaw.service.SchemaRegistryControllerService;
+import io.aiven.klaw.validation.PermissionAllowed;
+import jakarta.validation.Valid;
+import java.util.List;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/")
+@Slf4j
+public class SchemaRegistryController {
+
+  @Autowired SchemaRegistryControllerService schemaRegistryControllerService;
+  @Autowired SchemaOverviewService schemaOverviewService;
+
+  /**
+   * @param pageNo Which page would you like returned e.g. 1
+   * @param currentPage Which Page are you currently on e.g. 1
+   * @param requestStatus What type of requests are you looking for e.g. 'all' 'created' or
+   *     'deleted'
+   * @param topic The name of the topic you would like returned @Param operationType The
+   *     RequestOperationType Create/Update/Promote/Claim/Delete
+   * @param env The name of the environment you would like returned e.g. '1'
+   * @param search A wildcard search on the topic name allowing @Param isMyRequest return only
+   *     requests I have made
+   * @param requestOperationType is a filter to only return requests of a certain operation type *
+   *     e.g. CREATE/UPDATE/PROMOTE/CLAIM/DELETE
+   * @param order allows the requestor to specify what order the pagination should be returned in
+   *     OLDEST_FIRST/NEWEST_FIRST
+   * @return A list of filtered Schema Requests for My (Teams) Requests page
+   */
+  @RequestMapping(
+      value = "/getSchemaRequests",
+      method = RequestMethod.GET,
+      produces = {MediaType.APPLICATION_JSON_VALUE})
+  public ResponseEntity<List<SchemaRequestsResponseModel>> getSchemaRequests(
+      @RequestParam("pageNo") String pageNo,
+      @RequestParam(value = "currentPage", defaultValue = "") String currentPage,
+      @RequestParam(value = "requestStatus", defaultValue = "ALL") RequestStatus requestStatus,
+      @RequestParam(value = "topic", required = false) String topic,
+      @RequestParam(value = "env", required = false) String env,
+      @RequestParam(value = "search", required = false) String search,
+      @RequestParam(value = "operationType", required = false)
+          RequestOperationType requestOperationType,
+      @RequestParam(value = "order", required = false, defaultValue = "DESC_REQUESTED_TIME")
+          Order order,
+      @RequestParam(value = "isMyRequest", required = false, defaultValue = "false")
+          boolean isMyRequest) {
+    return new ResponseEntity<>(
+        schemaRegistryControllerService.getSchemaRequests(
+            pageNo,
+            currentPage,
+            requestStatus.value,
+            requestOperationType,
+            false,
+            topic,
+            env,
+            search,
+            order,
+            isMyRequest),
+        HttpStatus.OK);
+  }
+
+  /**
+   * @param pageNo Which page would you like returned e.g. 1
+   * @param currentPage Which Page are you currently on e.g. 1
+   * @param requestStatus What type of requests are you looking for e.g. 'all' 'created' or
+   *     'deleted'
+   * @param topic The name of the topic you would like returned
+   * @param env The name of the environment you would like returned e.g. '1'
+   * @param search A wildcard seearch on the topic name allowing
+   * @param requestOperationType is a filter to only return requests of a certain operation type *
+   *     e.g. CREATE/UPDATE/PROMOTE/CLAIM/DELETE
+   * @param order allows the requestor to specify what order the pagination should be returned in
+   *     OLDEST_FIRST/NEWEST_FIRST
+   * @return A list of filtered Schema Requests for approval
+   */
+  @PermissionAllowed(
+      permissionAllowed = {
+        PermissionType.APPROVE_SCHEMAS,
+        PermissionType.APPROVE_ALL_REQUESTS_TEAMS
+      })
+  @RequestMapping(
+      value = "/getSchemaRequestsForApprover",
+      method = RequestMethod.GET,
+      produces = {MediaType.APPLICATION_JSON_VALUE})
+  public ResponseEntity<List<SchemaRequestsResponseModel>> getSchemaRequestsForApprover(
+      @RequestParam("pageNo") String pageNo,
+      @RequestParam(value = "currentPage", defaultValue = "") String currentPage,
+      @RequestParam(value = "requestStatus", defaultValue = "CREATED") RequestStatus requestStatus,
+      @RequestParam(value = "topic", required = false) String topic,
+      @RequestParam(value = "env", required = false) String env,
+      @RequestParam(value = "search", required = false) String search,
+      @RequestParam(value = "operationType", required = false)
+          RequestOperationType requestOperationType,
+      @RequestParam(value = "order", required = false, defaultValue = "ASC_REQUESTED_TIME")
+          Order order) {
+    return new ResponseEntity<>(
+        schemaRegistryControllerService.getSchemaRequests(
+            pageNo,
+            currentPage,
+            requestStatus.value,
+            requestOperationType,
+            true,
+            topic,
+            env,
+            search,
+            order,
+            false),
+        HttpStatus.OK);
+  }
+
+  @PermissionAllowed(permissionAllowed = {PermissionType.REQUEST_CREATE_SCHEMAS})
+  @PostMapping(
+      value = "/deleteSchemaRequests",
+      produces = {MediaType.APPLICATION_JSON_VALUE})
+  public ResponseEntity<ApiResponse> deleteSchemaRequests(
+      @RequestParam("req_no") String avroSchemaReqId) throws KlawException {
+    return new ResponseEntity<>(
+        schemaRegistryControllerService.deleteSchemaRequests(avroSchemaReqId), HttpStatus.OK);
+  }
+
+  @PermissionAllowed(
+      permissionAllowed = {
+        PermissionType.APPROVE_SCHEMAS,
+        PermissionType.APPROVE_ALL_REQUESTS_TEAMS
+      })
+  @PostMapping(
+      value = "/execSchemaRequests",
+      produces = {MediaType.APPLICATION_JSON_VALUE})
+  public ResponseEntity<ApiResponse> execSchemaRequests(
+      @RequestParam("avroSchemaReqId") String avroSchemaReqId) throws KlawException {
+    return new ResponseEntity<>(
+        schemaRegistryControllerService.execSchemaRequests(avroSchemaReqId), HttpStatus.OK);
+  }
+
+  @PermissionAllowed(
+      permissionAllowed = {
+        PermissionType.APPROVE_SCHEMAS,
+        PermissionType.APPROVE_ALL_REQUESTS_TEAMS
+      })
+  @PostMapping(
+      value = "/execSchemaRequestsDecline",
+      produces = {MediaType.APPLICATION_JSON_VALUE})
+  public ResponseEntity<ApiResponse> execSchemaRequestsDecline(
+      @RequestParam("avroSchemaReqId") String avroSchemaReqId,
+      @RequestParam("reasonForDecline") String reasonForDecline)
+      throws KlawException {
+    return new ResponseEntity<>(
+        schemaRegistryControllerService.execSchemaRequestsDecline(
+            avroSchemaReqId, reasonForDecline),
+        HttpStatus.OK);
+  }
+
+  @PermissionAllowed(permissionAllowed = {PermissionType.REQUEST_CREATE_SCHEMAS})
+  @PostMapping(
+      value = "/uploadSchema",
+      produces = {MediaType.APPLICATION_JSON_VALUE})
+  public ResponseEntity<ApiResponse> uploadSchema(
+      @Valid @RequestBody SchemaRequestModel addSchemaRequest) throws KlawException {
+    return new ResponseEntity<>(
+        schemaRegistryControllerService.uploadSchema(addSchemaRequest, RequestOperationType.CREATE),
+        HttpStatus.OK);
+  }
+
+  @PermissionAllowed(permissionAllowed = {PermissionType.REQUEST_CREATE_SCHEMAS})
+  @PostMapping(
+      value = "/promote/schema",
+      produces = {MediaType.APPLICATION_JSON_VALUE})
+  public ResponseEntity<ApiResponse> promoteSchema(@RequestBody SchemaPromotion promoteSchemaReq)
+      throws Exception {
+
+    return ResponseEntity.ok(schemaRegistryControllerService.promoteSchema(promoteSchemaReq));
+  }
+
+  /**
+   * @param topicName Get schema of this topic
+   * @param schemaVersionSearch Version of the schema if applicable
+   * @param kafkaEnvId env ids of the topic where it exists
+   * @return SchemaOverview which contains schema and list of versions, compatibility, and promotion
+   *     details
+   */
+  @RequestMapping(
+      value = "/getSchemaOfTopic",
+      method = RequestMethod.GET,
+      produces = {MediaType.APPLICATION_JSON_VALUE})
+  public ResponseEntity<SchemaOverview> getSchemaOfTopic(
+      @RequestParam(value = "topicName") String topicName,
+      @RequestParam(value = "schemaVersionSearch", defaultValue = "0") int schemaVersionSearch,
+      @RequestParam(value = "kafkaEnvId") String kafkaEnvId) {
+    return new ResponseEntity<>(
+        schemaOverviewService.getSchemaOfTopic(topicName, schemaVersionSearch, kafkaEnvId),
+        HttpStatus.OK);
+  }
+
+  @PermissionAllowed(permissionAllowed = {PermissionType.REQUEST_CREATE_SCHEMAS})
+  @PostMapping(
+      value = "/validate/schema",
+      produces = {MediaType.APPLICATION_JSON_VALUE})
+  public ResponseEntity<ApiResponse> validateSchema(@RequestBody SchemaRequestModel schemaRequest)
+      throws Exception {
+
+    return ResponseEntity.ok(schemaRegistryControllerService.validateSchema(schemaRequest));
+  }
+
+  /**
+   * @param schemaReqId requestId of schema
+   * @return Schema Request details
+   */
+  @RequestMapping(
+      value = "/schema/request/{schemaReqId}",
+      method = RequestMethod.GET,
+      produces = {MediaType.APPLICATION_JSON_VALUE})
+  public ResponseEntity<SchemaRequestsResponseModel> getSchemaRequest(
+      @PathVariable Integer schemaReqId) {
+    return new ResponseEntity<>(
+        schemaRegistryControllerService.getSchemaRequest(schemaReqId), HttpStatus.OK);
+  }
+}

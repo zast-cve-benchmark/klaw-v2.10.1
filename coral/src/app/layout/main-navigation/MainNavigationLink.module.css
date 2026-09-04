@@ -1,0 +1,29 @@
+/*@TODO check with design, no hover styles
+   defined and active styles is not meeting
+   accessibility standards */
+
+.mainNavigationLink a {
+  color: var(--body-text-color) !important;
+  display: block;
+}
+
+.mainNavigationLink a:hover,
+.mainNavigationLink a:focus-visible,
+.mainNavigationLink:focus-within {
+  color: var(--navigation-elements-hover) !important;
+}
+
+.mainNavigationLink a:hover,
+.mainNavigationLink a:focus-visible,
+.mainNavigationLink:focus-within,
+.mainNavigationLinkActive a {
+  text-decoration: none !important;
+}
+
+.mainNavigationLinkActive a {
+  display: block;
+}
+
+.mainNavigationLinkActive {
+  background-color: white !important;
+}

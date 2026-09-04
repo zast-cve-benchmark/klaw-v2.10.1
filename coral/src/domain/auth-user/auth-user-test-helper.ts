@@ -1,0 +1,41 @@
+import { AuthUser } from "src/domain/auth-user/auth-user-types";
+
+const testAuthUser: AuthUser = {
+  canSwitchTeams: "false",
+  teamId: "1234567",
+  teamname: "awesome-bunch-of-people",
+  username: "i-am-test-user",
+  userrole: "USER",
+  totalTeamTopics: 0,
+  totalOrgTopics: 0,
+  permissions: {
+    canShutdownKw: false,
+    canUpdatePermissions: false,
+    addEditRoles: false,
+    viewTopics: false,
+    requestItems: false,
+    viewKafkaConnect: false,
+    syncBackTopics: false,
+    syncBackSchemas: false,
+    syncBackAcls: false,
+    updateServerConfig: false,
+    showServerConfigEnvProperties: false,
+    addUser: false,
+    addTeams: false,
+    syncTopicsAcls: false,
+    syncConnectors: false,
+    manageConnectors: false,
+    syncSchemas: false,
+    approveAtleastOneRequest: false,
+    approveDeclineTopics: false,
+    approveDeclineOperationalReqs: false,
+    approveDeclineSubscriptions: false,
+    approveDeclineSchemas: false,
+    approveDeclineConnectors: false,
+    showAddDeleteTenants: false,
+    addDeleteEditClusters: false,
+    addDeleteEditEnvs: false,
+  },
+};
+
+export { testAuthUser };

@@ -1,0 +1,39 @@
+import { createMockEnvironmentDTO } from "src/domain/environment/environment-test-helper";
+
+describe("environment-test-helper.ts", () => {
+  describe("createMockEnvironmentDTO", () => {
+    it("creates a mocked EnvironmentDTO object with a given name", () => {
+      const nameToTest = "TST";
+      const result = {
+        allPageNos: ["1"],
+        currentPage: "1",
+        totalRecs: 1,
+        clusterId: 1,
+        clusterName: "DEV",
+        defaultPartitions: undefined,
+        defaultReplicationFactor: undefined,
+        envStatus: "ONLINE",
+        envStatusTime: "2023-09-08T12:34:10.615919098",
+        envStatusTimeString: "21-Sep-2023 11:46:15",
+        id: "1",
+        maxPartitions: undefined,
+        maxReplicationFactor: undefined,
+        name: nameToTest,
+        otherParams:
+          "default.partitions=2,max.partitions=2,default.replication.factor=1,max.replication.factor=1,topic.prefix=,topic.suffix=",
+        params: {},
+        showDeleteEnv: false,
+        tenantId: 101,
+        tenantName: "default",
+        topicprefix: undefined,
+        topicsuffix: undefined,
+        totalNoPages: "1",
+        type: "kafka",
+        associatedEnv: undefined,
+        clusterType: "ALL",
+      };
+
+      expect(createMockEnvironmentDTO({ name: nameToTest })).toEqual(result);
+    });
+  });
+});

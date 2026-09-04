@@ -1,0 +1,58 @@
+/** TEMP browser reset and general vars
+ * until we can consume that from the DS
+*/
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  font-size: 16px;
+  font-family: "Inter", serif;
+}
+
+body {
+  margin: 0;
+  /*represents grey-70*/
+  color: var(--body-text-color);
+  -webkit-text-size-adjust: 100%;
+}
+
+/*!* removes the "x" in search inputs from webkit *!*/
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+  display: none;
+}
+
+/*Override custom CSS variables DS*/
+:root {
+  --aquarium-colors-primary-100: #0788d1;
+  --aquarium-colors-primary-90: #0788d1;
+  --aquarium-colors-primary-80: #0788d1;
+  --aquarium-colors-primary-70: #139fe4;
+  --aquarium-colors-primary-60: #3cb7f4;
+  --aquarium-colors-primary-50: #80cff9;
+  --aquarium-colors-primary-40: #bce5fb;
+  --aquarium-colors-primary-30: #ccebfc;
+  --aquarium-colors-primary-20: #dbf1fd;
+  --aquarium-colors-primary-10: #eaf7fe;
+  --aquarium-colors-primary-5: #f9fdff;
+  --aquarium-colors-primary-0: #f9fdff;
+
+  /* --headline-text-color represents the value for
+     --aquarium-colors-grey-100. We need to set this
+     value for topic documentation h elements. Creating
+     a specific variable for that makes it more clear that
+     we're not overriding the DS value here, but reusing
+     it in one specific case. */
+  --headline-text-color: #19191d;
+  --body-text-color: #4a4b57;
+  --text-link-color: #0788d1;
+  --text-link-color-hover: #02a8f3;
+}
